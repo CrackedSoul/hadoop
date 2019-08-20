@@ -11,8 +11,6 @@ pipeline {
             steps {
                 echo 'Package..'
                 sh 'mvn clean install'
-                echo 'SonarQube Test..'
-                sh 'mvn sonar:sonar'
             }
         } 
     }
