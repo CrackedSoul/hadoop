@@ -47,7 +47,7 @@ public class NumberCountMiniClusterTest extends ClusterMapReduceTestCase {
         input.toString(), output.toString()});
     assertThat(exitCode, is(0));
 
-    getFileSystem().copyToLocalFile(output, new Path("output"));
+//    getFileSystem().copyToLocalFile(output, new Path("output"));
 
     Path[] outputFiles = FileUtil.stat2Paths(
         getFileSystem().listStatus(output, new OutputLogFilter()));
