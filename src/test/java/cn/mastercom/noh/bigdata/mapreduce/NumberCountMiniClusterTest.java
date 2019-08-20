@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
@@ -13,7 +13,9 @@ import org.apache.hadoop.fs.PathFilter;
 import org.apache.hadoop.mapred.ClusterMapReduceTestCase;
 
 public class NumberCountMiniClusterTest extends ClusterMapReduceTestCase {
+
   public static class OutputLogFilter implements PathFilter {
+
     public boolean accept(Path path) {
       return !path.getName().startsWith("_");
     }
@@ -29,7 +31,8 @@ public class NumberCountMiniClusterTest extends ClusterMapReduceTestCase {
     }
     super.setUp();
   }
-  public void  testMiniCluster() throws Exception {
+
+  public void testMiniCluster() throws Exception {
 
     Path localInput = new Path("input");
     Path input = getInputDir();
@@ -40,19 +43,25 @@ public class NumberCountMiniClusterTest extends ClusterMapReduceTestCase {
     Configuration conf = createJobConf();
     driver.setConf(conf);
 
-    int exitCode = driver.run(new String[] {
-        input.toString(), output.toString() });
+    int exitCode = driver.run(new String[]{
+        input.toString(), output.toString()});
     assertThat(exitCode, is(0));
 
     getFileSystem().copyToLocalFile(output, new Path("output"));
 
     Path[] outputFiles = FileUtil.stat2Paths(
         getFileSystem().listStatus(output, new OutputLogFilter()));
-    InputStream in = getFileSystem().open(outputFiles[0]);
-    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    checkOutput(outputFiles[0]);
+
+  }
+
+  private void checkOutput(Path outPath) throws IOException {
+    BufferedReader out = new BufferedReader(new InputStreamReader(getFileSystem().open(outPath)));
+    BufferedReader expected = new BufferedReader(
+        new InputStreamReader(this.getClass().getResourceAsStream("output/out")));
     String buff;
-    while ((buff=reader.readLine())!=null){
-      System.out.println(buff);
+    while ((buff = out.readLine()) != null) {
+      assertEquals(expected.readLine(), buff);
     }
   }
 
