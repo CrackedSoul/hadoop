@@ -58,7 +58,7 @@ public class NumberCountMiniClusterTest extends ClusterMapReduceTestCase {
   private void checkOutput(Path outPath) throws IOException {
     BufferedReader out = new BufferedReader(new InputStreamReader(getFileSystem().open(outPath)));
     BufferedReader expected = new BufferedReader(
-        new InputStreamReader(this.getClass().getResourceAsStream("output/out")));
+        new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("output/out")));
     String buff;
     while ((buff = out.readLine()) != null) {
       assertEquals(expected.readLine(), buff);
