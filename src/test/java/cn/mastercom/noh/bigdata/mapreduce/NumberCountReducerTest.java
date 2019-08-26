@@ -14,8 +14,14 @@ public class NumberCountReducerTest {
 
     @Test
     public void testReducer() throws IOException {
-      new ReduceDriver<LongWritable, IntWritable,LongWritable,IntWritable>().withReducer(new NumberCountReducer())
-          .withInput(new LongWritable(232L), Arrays.asList(new IntWritable(3),new IntWritable(1),new IntWritable(4),new IntWritable(2)))
-          .withOutput(new LongWritable(232L),new IntWritable(10)).runTest();
+      new ReduceDriver<LongWritable, IntWritable,LongWritable,IntWritable>()
+          .withReducer(new NumberCountReducer())
+          .withInput(new LongWritable(232L),
+              Arrays.asList(new IntWritable(3),
+                  new IntWritable(1),
+                  new IntWritable(4),
+                  new IntWritable(2)))
+          .withOutput(new LongWritable(232L),new IntWritable(10))
+          .runTest();
     }
 }

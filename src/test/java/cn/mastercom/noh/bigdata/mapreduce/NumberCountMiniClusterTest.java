@@ -36,29 +36,28 @@ public class NumberCountMiniClusterTest extends ClusterMapReduceTestCase {
 
     Path localInput = new Path("input");
     Path input = getInputDir();
-    Path output = getOutputDir();
     getFileSystem().copyFromLocalFile(localInput, input);
 
     NumberCountDriver driver = new NumberCountDriver();
     Configuration conf = createJobConf();
     driver.setConf(conf);
 
+    Path output = getOutputDir();
     int exitCode = driver.run(new String[]{
         input.toString(), output.toString()});
     assertThat(exitCode, is(0));
 
-//    getFileSystem().copyToLocalFile(output, new Path("output"));
-
     Path[] outputFiles = FileUtil.stat2Paths(
         getFileSystem().listStatus(output, new OutputLogFilter()));
     checkOutput(outputFiles[0]);
-
   }
 
   private void checkOutput(Path outPath) throws IOException {
-    BufferedReader out = new BufferedReader(new InputStreamReader(getFileSystem().open(outPath)));
+    BufferedReader out = new BufferedReader(
+        new InputStreamReader(getFileSystem().open(outPath)));
     BufferedReader expected = new BufferedReader(
-        new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("output/out")));
+        new InputStreamReader(this.getClass()
+            .getClassLoader().getResourceAsStream("output/out")));
     String buff;
     while ((buff = out.readLine()) != null) {
       assertEquals(expected.readLine(), buff);

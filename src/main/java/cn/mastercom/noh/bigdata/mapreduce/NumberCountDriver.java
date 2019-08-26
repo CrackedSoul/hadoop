@@ -23,16 +23,15 @@ public class NumberCountDriver extends Configured implements Tool {
       return -1;
     }
 
-    Job job = new Job(getConf(), "Number Count");
+    Job job =  Job.getInstance(getConf(), "Number Count");
     job.setJarByClass(getClass());
-
-    FileInputFormat.addInputPath(job, new Path(args[0]));
-    FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
     job.setMapperClass(NumberCountMapper.class);
     job.setReducerClass(NumberCountReducer.class);
     job.setOutputKeyClass(LongWritable.class);
     job.setOutputValueClass(IntWritable.class);
+
+    FileInputFormat.addInputPath(job, new Path(args[0]));
+    FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
     return job.waitForCompletion(true) ? 0 : 1;
   }

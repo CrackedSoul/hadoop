@@ -1,6 +1,8 @@
 package cn.mastercom.noh.bigdata.mapreduce;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -10,11 +12,13 @@ import org.junit.Test;
 
 public class NumberCountMapperTest {
   @Before
-  public void setup(){}
+  public void setup() throws IOException {
+  }
 
   @Test
   public void testMapper_Normal_returnNormal() throws IOException {
-    new MapDriver<LongWritable, Text,LongWritable, IntWritable>().withMapper(new NumberCountMapper())
+    new MapDriver<LongWritable, Text,LongWritable, IntWritable>()
+        .withMapper(new NumberCountMapper())
         .withInput(new LongWritable(),new Text("324 310 262 202 272 312 214 381 241 206"))
         .withOutput(new LongWritable(324L),new IntWritable(1))
         .withOutput(new LongWritable(310L),new IntWritable(1))
@@ -30,13 +34,15 @@ public class NumberCountMapperTest {
   }
   @Test
   public void testMapper_empty_returnEmpty() throws IOException {
-    new MapDriver<LongWritable, Text,LongWritable, IntWritable>().withMapper(new NumberCountMapper())
+    new MapDriver<LongWritable, Text,LongWritable, IntWritable>()
+        .withMapper(new NumberCountMapper())
         .withInput(new LongWritable(),new Text(""))
         .runTest();
   }
   @Test
   public void testMapper_ErrNum_returnLess() throws IOException {
-    new MapDriver<LongWritable, Text,LongWritable, IntWritable>().withMapper(new NumberCountMapper())
+    new MapDriver<LongWritable, Text,LongWritable, IntWritable>()
+        .withMapper(new NumberCountMapper())
         .withInput(new LongWritable(),new Text("324 310 2v62 202 272 31a2 214 381 241 206"))
         .withOutput(new LongWritable(324L),new IntWritable(1))
         .withOutput(new LongWritable(310L),new IntWritable(1))

@@ -10,8 +10,8 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 public class NumberCountReducer extends Reducer<LongWritable, IntWritable, LongWritable, IntWritable> {
 
-  private LongWritable outKey;
-  private IntWritable outValue;
+  private LongWritable outKey= new LongWritable();
+  private IntWritable outValue= new IntWritable();
 
   @Override
   public void setup(Context context) throws IOException, InterruptedException {
@@ -25,10 +25,10 @@ public class NumberCountReducer extends Reducer<LongWritable, IntWritable, LongW
   }
 
   @Override
-  public void reduce(LongWritable key, Iterable<IntWritable> values, Context context
-  ) throws IOException, InterruptedException {
-    outKey = new LongWritable();
-    outValue = new IntWritable();
+  public void reduce(LongWritable key, Iterable<IntWritable> values,
+      Context context) throws IOException, InterruptedException {
+//    outKey = new LongWritable();
+//    outValue = new IntWritable();
     outKey.set(key.get());
     for (IntWritable value : values) {
       outValue.set(outValue.get() + value.get());
